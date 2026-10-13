@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth');
 const meRoutes = require('./routes/me');
 const notesRoutes = require('./routes/notes');
 const usersRoutes = require('./routes/users');
+const postsRoutes = require('./routes/posts');
 
 function createApp() {
   const app = express();
@@ -24,6 +25,9 @@ function createApp() {
   app.use('/me', meRoutes);
   app.use('/notes', notesRoutes);
   app.use('/admin/notes', notesRoutes.adminRouter);
+  app.use('/posts', postsRoutes);
+  // Public posts route is mounted BEFORE the admin-guarded /users router.
+  app.use('/users', postsRoutes.userPostsRouter);
   app.use('/users', usersRoutes);
 
   app.use(errorHandler);

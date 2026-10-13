@@ -10,7 +10,7 @@ async function seedAdmin({ email, password, name }) {
   return User.findOneAndUpdate(
     { email: email.trim().toLowerCase() },
     { $set: { name: name || 'Admin', passwordHash, role: 'admin' } },
-    { upsert: true, new: true, setDefaultsOnInsert: true }
+    { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
   );
 }
 

@@ -46,7 +46,7 @@ router.get('/:id', validateObjectId('id'), asyncHandler(async (req, res) => {
 
 router.patch('/:id', validateObjectId('id'), asyncHandler(async (req, res) => {
   const data = patchSchema.parse(req.body);
-  const note = await Note.findOneAndUpdate({ _id: req.params.id, owner: req.user.id }, data, { new: true });
+  const note = await Note.findOneAndUpdate({ _id: req.params.id, owner: req.user.id }, data, { returnDocument: 'after' });
   if (!note) throw new HttpError(404, 'Note not found');
   res.json(note);
 }));

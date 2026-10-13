@@ -63,7 +63,7 @@ router.patch('/:id', validateObjectId('id'), asyncHandler(async (req, res) => {
   const { password, ...rest } = patchSchema.parse(req.body);
   const update = { ...rest };
   if (password) update.passwordHash = await bcrypt.hash(password, BCRYPT_COST);
-  const user = await User.findByIdAndUpdate(req.params.id, update, { new: true });
+  const user = await User.findByIdAndUpdate(req.params.id, update, { returnDocument: 'after' });
   if (!user) throw new HttpError(404, 'User not found');
   res.json(user);
 }));

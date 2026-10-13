@@ -21,7 +21,7 @@ router.patch('/', asyncHandler(async (req, res) => {
   const { password, ...rest } = patchSchema.parse(req.body);
   const update = { ...rest };
   if (password) update.passwordHash = await bcrypt.hash(password, 12);
-  const user = await User.findByIdAndUpdate(req.user.id, update, { new: true });
+  const user = await User.findByIdAndUpdate(req.user.id, update, { returnDocument: 'after' });
   res.json(user);
 }));
 

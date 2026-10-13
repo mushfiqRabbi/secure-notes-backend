@@ -5,6 +5,7 @@ const { validateObjectId } = require('./middleware/objectId');
 const { errorHandler } = require('./middleware/error');
 const authRoutes = require('./routes/auth');
 const meRoutes = require('./routes/me');
+const notesRoutes = require('./routes/notes');
 
 function createApp() {
   const app = express();
@@ -20,6 +21,8 @@ function createApp() {
 
   app.use('/auth', authRoutes);
   app.use('/me', meRoutes);
+  app.use('/notes', notesRoutes);
+  app.use('/admin/notes', notesRoutes.adminRouter);
 
   app.use(errorHandler);
   return app;

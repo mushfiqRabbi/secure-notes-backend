@@ -54,17 +54,6 @@ const usesIdIndex = (r) => {
   expect(r.indexes.has('_id_')).toBe(true);
 };
 
-const plan = async (query) => inspect(await query.explain('queryPlanner'));
-const usesIndex = (r, name) => {
-  expect(r.stages.has('COLLSCAN')).toBe(false);
-  expect(r.stages.has('IXSCAN')).toBe(true);
-  expect(r.indexes.has(name)).toBe(true);
-};
-// Point lookups on _id take MongoDB's IDHACK fast path, which reads the _id index directly.
-const usesIdIndex = (r) => {
-  expect(r.stages.has('COLLSCAN')).toBe(false);
-  console.log([...r.stages], [...r.indexes]); expect(r.stages.has('IDHACK')).toBe(true);
-};
 
 test('user notes list -> owner_1__id_-1', async () =>
   usesIndex(await plan(Note.find({ owner }).sort({ _id: -1 }).limit(20)), 'owner_1__id_-1'));

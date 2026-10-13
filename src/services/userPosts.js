@@ -5,8 +5,8 @@ const User = require('../models/user');
 //   $match {_id}                       -> default _id index
 //   $lookup posts (author)             -> {author:1,_id:-1}: equality + newest-first sort in the sub-pipeline
 // The second $lookup only counts, so pagination metadata comes from the same round trip.
-async function getUserWithPosts(userId, { skip, limit }) {
-  const [doc] = await User.aggregate([
+function buildUserPostsPipeline(userId, { skip, limit }) {
+  return [
     { $match: { _id: new mongoose.Types.ObjectId(userId) } },
     {
       $lookup: {
@@ -27,8 +27,12 @@ async function getUserWithPosts(userId, { skip, limit }) {
       },
     },
     { $project: { name: 1, posts: 1, total: { $ifNull: [{ $first: '$count.n' }, 0] } } },
-  ]);
+  ];
+}
+
+async function getUserWithPosts(userId, page) {
+  const [doc] = await User.aggregate(buildUserPostsPipeline(userId, page));
   return doc || null;
 }
 
-module.exports = { getUserWithPosts };
+module.exports = { getUserWithPosts, buildUserPostsPipeline };

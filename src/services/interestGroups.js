@@ -5,7 +5,7 @@ const User = require('../models/user');
 //   $match {interests: <x>}   -> multikey {interests:1} when an interest filter is given
 //   $setUnion                 -> a user listing the same interest twice counts once
 //   second $match after $unwind keeps only the requested group (the first one selects users)
-async function groupUsersByInterest({ interest, skip, limit }) {
+function buildInterestPipeline({ interest, skip, limit }) {
   const pipeline = [
     {
       $match: interest
@@ -36,9 +36,12 @@ async function groupUsersByInterest({ interest, skip, limit }) {
       },
     }
   );
+  return pipeline;
+}
 
-  const [result] = await User.aggregate(pipeline);
+async function groupUsersByInterest(params) {
+  const [result] = await User.aggregate(buildInterestPipeline(params));
   return { items: result.items, total: result.meta[0] ? result.meta[0].total : 0 };
 }
 
-module.exports = { groupUsersByInterest };
+module.exports = { groupUsersByInterest, buildInterestPipeline };

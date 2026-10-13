@@ -6,6 +6,7 @@ const { errorHandler } = require('./middleware/error');
 const authRoutes = require('./routes/auth');
 const meRoutes = require('./routes/me');
 const notesRoutes = require('./routes/notes');
+const usersRoutes = require('./routes/users');
 
 function createApp() {
   const app = express();
@@ -23,6 +24,7 @@ function createApp() {
   app.use('/me', meRoutes);
   app.use('/notes', notesRoutes);
   app.use('/admin/notes', notesRoutes.adminRouter);
+  app.use('/users', usersRoutes);
 
   app.use(errorHandler);
   return app;

@@ -8,7 +8,16 @@ const schema = new mongoose.Schema(
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     interests: { type: [String], default: [] },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      transform: (_doc, ret) => {
+        delete ret.passwordHash;
+        delete ret.__v;
+        return ret;
+      },
+    },
+  }
 );
 
 // Login + duplicate-email check (point lookup by email); unique = one account per email.

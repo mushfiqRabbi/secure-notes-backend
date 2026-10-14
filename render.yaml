@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: secure-notes-api
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 1h
+      - key: CORS_ORIGIN
+        value: https://secure-notes-frontend.vercel.app
+      - key: MONGO_URI
+        sync: false
